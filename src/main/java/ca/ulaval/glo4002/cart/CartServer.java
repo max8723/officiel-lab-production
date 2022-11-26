@@ -40,7 +40,7 @@ public class CartServer implements Runnable {
         }
         else {
             throw new RuntimeException(
-                    "No story parameter provided. Requires -D" + PORT_PARAMETER);
+                    "No port parameter provided. Requires -D" + PORT_PARAMETER);
         }
 
     }
