@@ -20,15 +20,29 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 
 public class CartServer implements Runnable {
-    private static final int PORT = 7222;
+    public static final String PORT_PARAMETER = "port";
+    private int port;
 
     public static void main(String[] args) {
         new CartServer().run();
     }
 
     public void run() {
+        getPort();
         configureContext();
         startServer();
+    }
+
+    private void getPort() {
+        String port = System.getProperty(PORT_PARAMETER);
+        if (port != null) {
+            this.port = Integer.parseInt(port);
+        }
+        else {
+            throw new RuntimeException(
+                    "No story parameter provided. Requires -D" + PORT_PARAMETER);
+        }
+
     }
 
     private void configureContext() {
@@ -36,7 +50,7 @@ public class CartServer implements Runnable {
     }
 
     private void startServer() {
-        Server server = new Server(PORT);
+        Server server = new Server(port);
         ServletContextHandler contextHandler = new ServletContextHandler(server, "/");
         contextHandler.addFilter(EntityManagerContextFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
 
